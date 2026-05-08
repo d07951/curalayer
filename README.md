@@ -38,7 +38,6 @@ Worker source lives in `cf-worker/src/index.ts`.
 cd cf-worker
 npm install
 npx wrangler login
-npx wrangler secret put OPENAI_API_KEY
 npm run deploy
 ```
 

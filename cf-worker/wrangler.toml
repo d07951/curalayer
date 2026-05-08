@@ -2,6 +2,5 @@ name = "curalayer-chat-api"
 main = "src/index.ts"
 compatibility_date = "2026-05-08"
 
-[vars]
-OPENAI_BASE_URL = "https://api.openai.com/v1"
-OPENAI_MODEL = "gpt-4o-mini"
+[ai]
+binding = "AI"

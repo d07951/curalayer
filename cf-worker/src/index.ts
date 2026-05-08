@@ -1,7 +1,10 @@
 interface Env {
-  OPENAI_API_KEY: string;
-  OPENAI_BASE_URL?: string;
-  OPENAI_MODEL?: string;
+  AI: {
+    run: <T = { response?: string }>(
+      model: string,
+      options: { messages: Array<{ role: string; content: string }> }
+    ) => Promise<T>;
+  };
 }
 
 type ChatMessage = {
@@ -46,31 +49,14 @@ export default {
         return json({ error: 'messages is required' }, 400);
       }
 
-      const upstream = await fetch(`${env.OPENAI_BASE_URL || 'https://api.openai.com/v1'}/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          authorization: `Bearer ${env.OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: env.OPENAI_MODEL || 'gpt-4o-mini',
-          temperature: 0.3,
-          messages: [
-            { role: 'system', content: CLINICAL_SYSTEM_PROMPT },
-            ...messages
-          ]
-        })
+      const result = await env.AI.run<{ response?: string }>('@cf/meta/llama-3.1-8b-instruct', {
+        messages: [
+          { role: 'system', content: CLINICAL_SYSTEM_PROMPT },
+          ...messages
+        ]
       });
 
-      if (!upstream.ok) {
-        const errorText = await upstream.text();
-        return json({ error: 'upstream_failed', details: errorText }, 502);
-      }
-
-      const result = (await upstream.json()) as {
-        choices?: Array<{ message?: { content?: string } }>;
-      };
-      const text = result.choices?.[0]?.message?.content?.trim() || '当前无法生成临床回复，请稍后重试。';
+      const text = result?.response?.trim() || '当前无法生成临床回复，请稍后重试。';
       return json({ text });
     } catch (error) {
       return json({ error: 'internal_error' }, 500);
