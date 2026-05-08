@@ -1,0 +1,6 @@
+{
+  "name": "AI++ 业务组件演进 Playground",
+  "description": "基于 JSON Schema 协议和 AI 驱动的医疗信息化业务组件演进工具，支持自然语言调整样式、模块与交互，提供多套临床适配渲染器及回滚功能。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["AI Schema Evolution", "Medical Domain UI", "Versioning"]
+}
