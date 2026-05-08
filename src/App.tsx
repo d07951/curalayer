@@ -36,7 +36,9 @@ interface Message {
 import { IntegrationHub } from './components/IntegrationHub';
 
 export default function App() {
-  const chatApiUrl = import.meta.env.VITE_CHAT_API_URL || '/api/chat';
+  const chatApiUrl =
+    import.meta.env.VITE_CHAT_API_URL ||
+    'https://curalayer-chat-api.d07952.workers.dev/api/chat';
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'msg-system-init',
