@@ -35,10 +35,21 @@ interface Message {
 
 import { IntegrationHub } from './components/IntegrationHub';
 
+const CHAT_API_FALLBACK = 'https://curalayer-chat-api.d07952.workers.dev/api/chat';
+
 export default function App() {
-  const chatApiUrl =
-    import.meta.env.VITE_CHAT_API_URL ||
-    'https://curalayer-chat-api.d07952.workers.dev/api/chat';
+  const envChatUrl = import.meta.env.VITE_CHAT_API_URL?.trim();
+  const chatApiUrl = envChatUrl || CHAT_API_FALLBACK;
+  const chatApiSource: 'VITE_CHAT_API_URL' | 'fallback' = envChatUrl ? 'VITE_CHAT_API_URL' : 'fallback';
+
+  useEffect(() => {
+    console.info('[CuraLayer] Chat API resolved', {
+      source: chatApiSource,
+      url: chatApiUrl,
+      envValue: import.meta.env.VITE_CHAT_API_URL ?? '(undefined)'
+    });
+  }, [chatApiSource, chatApiUrl]);
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'msg-system-init',
